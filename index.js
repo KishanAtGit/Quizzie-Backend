@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const db = require("./config/db");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const fs = require("fs");
 const authMiddleware = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
 //logs recording middleware
 app.use((req, res, next) => {
   const log = `${req.method} - ${req.url} - ${req.ip} - ${new Date()}`;

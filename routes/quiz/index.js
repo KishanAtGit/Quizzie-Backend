@@ -1,8 +1,8 @@
 const express = require("express");
-const router = express();
+const quizRoutes = express();
 const Quiz = require("../../schemas/quiz");
 
-router.post("/create", async (req, res, next) => {
+quizRoutes.post("/create", async (req, res, next) => {
   try {
     const { quizName, quizType, questions } = req.body;
     // console.log(questions[0].options);
@@ -23,4 +23,4 @@ router.post("/create", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+module.exports = quizRoutes;

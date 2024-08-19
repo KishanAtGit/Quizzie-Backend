@@ -1,5 +1,5 @@
 const express = require("express");
-const router = express();
+const authRoutes = express();
 const User = require("../../schemas/user");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -7,8 +7,10 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 //to register an User
-router.post("/register", async (req, res, next) => {
+authRoutes.post("/register", async (req, res, next) => {
   try {
+    console.log(req.body);
+
     const { name, email, password } = req.body;
     const user = await User.findOne({ email });
     if (user) {
@@ -29,7 +31,7 @@ router.post("/register", async (req, res, next) => {
 });
 
 //to authenticate an user's credentials
-router.post("/login", async (req, res, next) => {
+authRoutes.post("/login", async (req, res, next) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -53,4 +55,4 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-module.exports = router;
+module.exports = authRoutes;

@@ -24,7 +24,7 @@ authRoutes.post("/register", async (req, res, next) => {
       password: hashedPassword,
     });
     await newUser.save();
-    res.status(200).json({ message: "User Registered Successfully" });
+    res.status(201).json({ message: "User Registered Successfully" });
   } catch (error) {
     next(error);
   }
@@ -33,6 +33,8 @@ authRoutes.post("/register", async (req, res, next) => {
 //to authenticate an user's credentials
 authRoutes.post("/login", async (req, res, next) => {
   try {
+    console.log(req.body);
+
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
@@ -47,6 +49,7 @@ authRoutes.post("/login", async (req, res, next) => {
         process.env.JWT_TOKEN_SECRET_KEY
       );
       res
+        .status(202)
         .header("auth-token", token)
         .json({ message: "Logged in successfully!" });
     }

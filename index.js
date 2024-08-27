@@ -7,6 +7,7 @@ const fs = require("fs");
 const authMiddleware = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const quizRoutes = require("./routes/quiz");
+const liveQuiz = require("./routes/live-quiz/live-quiz");
 
 const PORT = process.env.PORT || 3000;
 
@@ -26,6 +27,7 @@ app.use((req, res, next) => {
 //To register and authenticate an User
 app.use("/api/auth", authRoutes);
 app.use("/api/quiz", authMiddleware, quizRoutes);
+app.use("/api/live-quiz", liveQuiz);
 
 //error handling middleware
 app.use((err, req, res, next) => {

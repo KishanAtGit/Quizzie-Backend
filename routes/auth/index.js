@@ -51,7 +51,7 @@ authRoutes.post("/login", async (req, res, next) => {
       res
         .status(202)
         .header("auth-token", token)
-        .json({ message: "Logged in successfully!" });
+        .json({ message: "Logged in successfully!", token, userId: user._id });
     }
   } catch (error) {
     next(error);

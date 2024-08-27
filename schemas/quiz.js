@@ -11,21 +11,24 @@ const quizSchema = new mongoose.Schema({
   },
   questions: [
     {
-      question: {
-        type: String,
-        required: true,
+      questionText: String,
+      optionType: String,
+      optionTypeRadioChecked: {
+        textType: Boolean,
+        imageType: Boolean,
+        textAndImageType: Boolean,
       },
-      options: {
-        type: [String],
-      },
-      answer: {
-        type: Number,
-      },
-      timer: {
-        type: Number,
-      },
+      options: [
+        {
+          optionText: String,
+          imageUrl: String,
+          isCorrect: Boolean,
+        },
+      ],
+      timer: Number,
     },
   ],
+  createdBy_userId: String,
 });
 
 module.exports = mongoose.model("Quiz", quizSchema);

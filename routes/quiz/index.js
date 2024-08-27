@@ -4,20 +4,31 @@ const Quiz = require("../../schemas/quiz");
 
 quizRoutes.post("/create", async (req, res, next) => {
   try {
-    const { quizName, quizType, questions } = req.body;
-    // console.log(questions[0].options);
-
-    // const questionArray = questions.map(question =>
-    //   question.options.split(",").map(option => option.trim())
-    // );
-    // const questionArray = questions.split(",").map(question => question.trim());
+    const { quizName, quizType, questions, createdBy_userId } = req.body;
     const newQuiz = new Quiz({
       quizName,
       quizType,
       questions,
+      createdBy_userId,
     });
     await newQuiz.save();
-    res.status(201).json({ message: "Quiz Created Successfully!" });
+    res
+      .status(201)
+      .json({ message: "Quiz Created Successfully!", quizId: newQuiz._id });
+  } catch (error) {
+    next(error);
+  }
+});
+
+quizRoutes.get("/live-quiz/:quizId", async (req, res, next) => {
+  try {
+    const quizId = req.params.quizId;
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      res.status(500);
+    } else {
+      res.status(200).json({ quiz });
+    }
   } catch (error) {
     next(error);
   }

@@ -30,6 +30,7 @@ const quizSchema = new mongoose.Schema({
   ],
   quizImpression: Number,
   createdBy_userId: String,
+  createdOn: String,
 });
 
 module.exports = mongoose.model("Quiz", quizSchema);

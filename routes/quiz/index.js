@@ -4,12 +4,14 @@ const Quiz = require("../../schemas/quiz");
 
 quizRoutes.post("/create", async (req, res, next) => {
   try {
-    const { quizName, quizType, questions, createdBy_userId } = req.body;
+    const { quizName, quizType, questions, createdBy_userId, createdOn } =
+      req.body;
     const newQuiz = new Quiz({
       quizName,
       quizType,
       questions,
       createdBy_userId,
+      createdOn,
     });
     await newQuiz.save();
     res
@@ -20,9 +22,9 @@ quizRoutes.post("/create", async (req, res, next) => {
   }
 });
 
+//to get all quizs
 quizRoutes.get("/:createdBy_userId", async (req, res, next) => {
   try {
-    console.log(req.query);
     const createdBy_userId = req.params.createdBy_userId;
     const isTrending = req.query.isTrending === "true";
     const isSorted = req.query.isSorted === "true";
@@ -67,6 +69,69 @@ quizRoutes.get("/:createdBy_userId", async (req, res, next) => {
         totalImpression,
       });
     }
+  } catch (error) {
+    next(error);
+  }
+});
+
+//to update a quiz
+quizRoutes.patch("/update/:quizId/:questionIndex", async (req, res, next) => {
+  try {
+    const { quizId, questionIndex } = req.params;
+    const { questionText, optionText, timer, optionIndex } = req.body;
+
+    // Find the quiz by ID
+    const quiz = await Quiz.findById(quizId);
+    if (!quiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    // Get the specific question using questionIndex
+    const question = quiz.questions[questionIndex];
+    if (!question) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    // Update the questionText if provided
+    if (questionText) {
+      question.questionText = questionText;
+    }
+
+    // Update the timer if provided
+    if (timer !== undefined) {
+      question.timer = timer;
+    }
+
+    // Update the specific optionText if provided
+    if (optionText !== undefined && optionIndex !== undefined) {
+      const option = question.options[optionIndex];
+      if (option) {
+        option.optionText = optionText;
+      } else {
+        return res.status(404).json({ message: "Option not found" });
+      }
+    }
+
+    await quiz.save();
+
+    res.status(200).json({ message: "Quiz updated successfully", quiz });
+  } catch (error) {
+    next(error);
+  }
+});
+
+//to delete a quiz
+quizRoutes.delete("/delete/:quizId", async (req, res, next) => {
+  try {
+    const { quizId } = req.params;
+
+    const deletedQuiz = await Quiz.findByIdAndDelete(quizId);
+
+    if (!deletedQuiz) {
+      return res.status(404).json({ message: "Quiz not found" });
+    }
+
+    res.status(200).json({ message: "Quiz deleted successfully" });
   } catch (error) {
     next(error);
   }

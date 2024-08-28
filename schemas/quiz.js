@@ -28,6 +28,7 @@ const quizSchema = new mongoose.Schema({
       timer: Number,
     },
   ],
+  quizImpression: Number,
   createdBy_userId: String,
 });
 

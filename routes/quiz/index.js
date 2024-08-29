@@ -75,9 +75,9 @@ quizRoutes.get("/:createdBy_userId", async (req, res, next) => {
 });
 
 //to update a quiz
-quizRoutes.patch("/update/:quizId/:questionIndex", async (req, res, next) => {
+quizRoutes.patch("/update/:quizId/:questionId", async (req, res, next) => {
   try {
-    const { quizId, questionIndex } = req.params;
+    const { quizId, questionId } = req.params;
     const { questionText, optionText, timer, optionIndex } = req.body;
 
     // Find the quiz by ID
@@ -86,8 +86,8 @@ quizRoutes.patch("/update/:quizId/:questionIndex", async (req, res, next) => {
       return res.status(404).json({ message: "Quiz not found" });
     }
 
-    // Get the specific question using questionIndex
-    const question = quiz.questions[questionIndex];
+    // Find the specific question by questionId
+    const question = quiz.questions.id(questionId);
     if (!question) {
       return res.status(404).json({ message: "Question not found" });
     }

@@ -75,10 +75,13 @@ quizRoutes.get("/:createdBy_userId", async (req, res, next) => {
 });
 
 //to update a quiz
-quizRoutes.patch("/update/:quizId/:questionId", async (req, res, next) => {
+quizRoutes.patch("/update/:quizId", async (req, res, next) => {
   try {
-    const { quizId, questionId } = req.params;
-    const { questionText, optionText, timer, optionIndex } = req.body;
+    console.log(req.params);
+    console.log(req.body);
+
+    const { quizId } = req.params;
+    const { questions } = req.body; // Expecting the new questions array
 
     // Find the quiz by ID
     const quiz = await Quiz.findById(quizId);
@@ -86,30 +89,12 @@ quizRoutes.patch("/update/:quizId/:questionId", async (req, res, next) => {
       return res.status(404).json({ message: "Quiz not found" });
     }
 
-    // Find the specific question by questionId
-    const question = quiz.questions.id(questionId);
-    if (!question) {
-      return res.status(404).json({ message: "Question not found" });
-    }
+    // Replace the existing questions array with the new one
 
-    // Update the questionText if provided
-    if (questionText) {
-      question.questionText = questionText;
-    }
-
-    // Update the timer if provided
-    if (timer !== undefined) {
-      question.timer = timer;
-    }
-
-    // Update the specific optionText if provided
-    if (optionText !== undefined && optionIndex !== undefined) {
-      const option = question.options[optionIndex];
-      if (option) {
-        option.optionText = optionText;
-      } else {
-        return res.status(404).json({ message: "Option not found" });
-      }
+    if (Array.isArray(questions)) {
+      quiz.questions = questions;
+    } else {
+      return res.status(400).json({ message: "Invalid questions array" });
     }
 
     await quiz.save();

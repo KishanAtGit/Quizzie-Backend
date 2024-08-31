@@ -34,14 +34,14 @@ quizRoutes.get("/:createdBy_userId", async (req, res, next) => {
     if (isTrending && isSorted) {
       quiz = await Quiz.find({
         createdBy_userId,
-        quizImpression: { $gt: 10 }, // Filter: impressions greater than 10
+        quizImpression: { $gt: 10 },
       })
         .sort({ quizImpression: -1 })
         .limit(12);
     } else if (isTrending) {
       quiz = await Quiz.find({
         createdBy_userId,
-        quizImpression: { $gt: 10 }, // Filter: impressions greater than 10
+        quizImpression: { $gt: 10 },
       }).limit(12);
     } else if (isSorted) {
       quiz = await Quiz.find({ createdBy_userId }).sort({
@@ -54,12 +54,13 @@ quizRoutes.get("/:createdBy_userId", async (req, res, next) => {
     if (!quiz) {
       res.status(500);
     } else {
-      const totalQuestions = quiz
+      const quizForDashboard = await Quiz.find({ createdBy_userId });
+      const totalQuestions = quizForDashboard
         .map(q => q.questions.length)
         .reduce((a, b) => a + b, 0);
-      const totalQuizs = quiz.length;
-      const totalImpression = quiz
-        .map(q => q.quizImpression)
+      const totalQuizs = quizForDashboard.length;
+      const totalImpression = quizForDashboard
+        .map(q => q.quizImpression || 0)
         .reduce((a, b) => a + b, 0);
 
       res.status(200).json({

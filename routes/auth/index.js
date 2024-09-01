@@ -9,8 +9,6 @@ dotenv.config();
 //to register an User
 authRoutes.post("/register", async (req, res, next) => {
   try {
-    console.log(req.body);
-
     const { name, email, password } = req.body;
     const user = await User.findOne({ email });
     if (user) {
@@ -33,8 +31,6 @@ authRoutes.post("/register", async (req, res, next) => {
 //to authenticate an user's credentials
 authRoutes.post("/login", async (req, res, next) => {
   try {
-    console.log(req.body);
-
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) {

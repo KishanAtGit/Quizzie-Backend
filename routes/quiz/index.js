@@ -78,9 +78,6 @@ quizRoutes.get("/:createdBy_userId", async (req, res, next) => {
 //to update a quiz
 quizRoutes.patch("/update/:quizId", async (req, res, next) => {
   try {
-    console.log(req.params);
-    console.log(req.body);
-
     const { quizId } = req.params;
     const { questions } = req.body; // Expecting the new questions array
 

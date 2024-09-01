@@ -28,6 +28,7 @@ const quizSchema = new mongoose.Schema({
       ],
       totalPeopleAttempted: Number,
       peopleAttemptedCorrectly: Number,
+      peopleAttemptedWrongly: Number,
       timer: Number,
     },
   ],

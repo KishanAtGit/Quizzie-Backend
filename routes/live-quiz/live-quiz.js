@@ -45,7 +45,7 @@ liveQuiz.put("/attempt/:quizId/:questionId", async (req, res, next) => {
     } else if (!isCorrect && quiz.quizType === "Q&A") {
       question.peopleAttemptedWrongly =
         (question.peopleAttemptedWrongly || 0) + 1;
-    } else if (quiz.quizType === "poll") {
+    } else if (quiz.quizType === "Poll") {
       question.options.map(
         option =>
           option._id == isCorrect &&
